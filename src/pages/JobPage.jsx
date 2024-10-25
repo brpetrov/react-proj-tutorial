@@ -1,3 +1,5 @@
+// Import the JSON file
+import jobsData from '../jobs.json';
 import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -104,10 +106,16 @@ const JobPage = ({ deleteJob }) => {
     );
 };
 
+// Update jobLoader to use static data
 const jobLoader = async ({ params }) => {
-    const res = await fetch(`/api/jobs/${params.id}`);
-    const data = await res.json();
-    return data;
+    // Find the job by ID in the JSON data
+    const job = jobsData.jobs.find((job) => job.id === params.id);
+
+    if (!job) {
+        throw new Response("Job Not Found", { status: 404 });
+    }
+
+    return job;
 };
 
 export { JobPage as default, jobLoader };
